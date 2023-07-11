@@ -27,3 +27,24 @@
 0 <= timeSeries[i], duration <= 107
 timeSeries 按 非递减 顺序排列
 
+解题思路：
+1、遍历timeSeries数组，依次取得攻击发生时间
+2、计算本次攻击中毒结束时间 = 本次攻击发生时间 + duration
+3、计算总持续时间分情况讨论
+  1) 本次攻击发生时间，艾希未中毒
+      总中毒时间+=duration
+  2）本次攻击发生时间，艾希中毒了
+      总中毒时间+这次攻击额外造成的时间
+      额外时间计算方式：攻击发生时间+duration-上次攻击结束时间
+
+class Solution:
+    def findPoisonedDuration(self, timeSeries: List[int], duration: int) -> int:
+        ans, expired = 0, 0
+        for i in range(len(timeSeries)):
+            if timeSeries[i] >= expired:
+                ans += duration
+            else:
+                ans += timeSeries[i] + duration - expired
+            expired = timeSeries[i] + duration
+        return ans
+
