@@ -13,3 +13,21 @@
 提示：
 1 <= nums.length <= 105
 nums[i] 不是 0 就是 1.
+
+
+
+解题思路：
+1、按序遍历整个数组，如果遍历到1则计数。
+2、设置存储器帮助存储计数器记录到的最大值。
+3、比较存储器与计数器的大小并取较大值。
+class Solution:
+    def findMaxConsecutiveOnes(self, nums: List[int]) -> int:
+        Count = 0
+        Max_Count = 0
+        for i in nums:
+            if i == 1:
+                Count += 1
+            else:
+                Max_Count = max(Max_Count,Count)
+                Count = 0
+        return max(Max_Count,Count)
