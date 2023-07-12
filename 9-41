@@ -1,0 +1,44 @@
+给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
+ 
+
+示例 1：
+输入：nums = [1,2,0]
+输出：3
+
+示例 2：
+输入：nums = [3,4,-1,1]
+输出：2
+
+示例 3：
+输入：nums = [7,8,9,11,12]
+输出：1
+ 
+
+提示：
+1 <= nums.length <= 5 * 105
+-231 <= nums[i] <= 231 - 1
+
+
+解题思路:
+1、假设nums的长度为N
+  a)如果里面的元素正好为1-N，则输出结果N+1
+  b)如果里面的元素都＞=N+1或<=0，则输出结果为1
+  c)如果里面的元素存在1-N之间的，但不全是
+2、忽略范围不在1-N的数组元素
+3、对nums中i的映射为nums[i-1]=i
+4、按nums中的元素i依次查找其下标是否为i-1
+  a)如果是的话，继续检查下一个
+  b)如果不是的话，将nums[i-1]的值赋为i，对原先在nums[i-1]位置的值进行循环查找
+5、按序遍历nums数组，找出第一个不满足nums[i]=i+1的值，记录i+1的值，返回
+
+
+
+class Solution:
+    def firstMissingPositive(self, nums: List[int]) -> int:
+        for a in nums: #遍历每个座位，记当前坐着a号乘客
+            while 0<a<=len(nums) and a!=nums[a-1]:  #乘客a是正票但坐错了! 其座位被 ta=nums[a-1]占了
+                nums[a-1], a = a, nums[a - 1]  # a和ta两人互换则a对号入座。此后ta相当于新的a，去找自己的座位（循环执行）
+        for i in range(len(nums)):
+            if i+1!=nums[i]:return i+1  #找到首个没有对号入座的nums[i]!=i+1
+        return len(nums)+1  #满座，返回N+1
