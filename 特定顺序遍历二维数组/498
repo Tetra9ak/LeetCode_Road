@@ -1,0 +1,53 @@
+给你一个大小为 m x n 的矩阵 mat ，请以对角线遍历的顺序，用一个数组返回这个矩阵中的所有元素。
+
+
+示例 1：
+输入：mat = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[1,2,4,7,5,3,6,8,9]
+
+示例 2：
+输入：mat = [[1,2],[3,4]]
+输出：[1,2,3,4]
+ 
+
+提示：
+m == mat.length
+n == mat[i].length
+1 <= m, n <= 104
+1 <= m * n <= 104
+-105 <= mat[i][j] <= 105
+
+
+解题思路：
+1、在对角线上走时，横纵坐标的和为定值，从0到M+N-1
+2、通过判断是第几次折返来确定运动的方向是右上还是左下
+
+
+class Solution:
+    def findDiagonalOrder(self, mat: List[List[int]]) -> List[int]:
+        result = []
+        if len(mat) == 0:
+            return result
+
+        m = len(mat)
+        n = len(mat[0])
+        count = 0 
+        while count < m + n - 1:
+            # 向右上走，起点在左下
+            if count % 2 == 0:
+                x = count if (count < m) else (m - 1)
+                y = count - x
+                while (x >= 0 and y <= n-1):
+                    result.append(mat[x][y])
+                    x -= 1
+                    y += 1
+            # 向左下走，起点在右上
+            else:
+                y = count if (count < n) else (n - 1)
+                x = count - y
+                while (x <= m-1 and y >= 0):
+                    result.append(mat[x][y])
+                    x += 1
+                    y -= 1
+            count += 1
+        return result
