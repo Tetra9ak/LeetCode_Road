@@ -33,4 +33,56 @@
   1、先复制一个和k长度一致且从nums[n-k]开始到最后一位的列表
   2、将剩余的数字按从后往前的方式依次向右移动k个位置
   3、将列表中的数放入前k个位置
+
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        n = len(nums)
+        k %= n
+        # [n-k-1,n-1]
+        tmp = nums[n - k:].copy()
+        for i in range(n - k - 1, -1, -1):
+            nums[i + k] = nums[i]
+        for i in range(0, k):
+            nums[i] = tmp[i]
+
+
 2)多次反转
+  1、先将nums列表反转排列
+  2、依次再分别反转前k个数字和后n-k个数字
+
+def reverse(nums: List[int], left, right) -> None:
+    i, j = left, right
+    while i < j:
+        nums[i], nums[j] = nums[j], nums[i]
+        i+=1
+        j-=1
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        n = len(nums)
+        k %= n
+        reverse(nums, 0, n - 1)
+        reverse(nums, 0, k - 1)
+        reverse(nums, k, n - 1)
+
+
+3)裴蜀定理
+1、我们每处理一个位置，就跳转到k个位置之后的位置。用pre变量始终保存着上一次覆盖位置的值。
+2、到达新位置i，我们首先需要将下一个位置的值的值临时记录为tmp，然后用pre更新当前位置，同时将pre更新为临时变量的值。
+3、一直重复轮转。由裴蜀定理可知，
+  1)当gcd(n,k)=1时，一直轮转下去可以遍历一整遍数组。当遍历次数到达n次需要退出。
+  2)当g=gcd(n,k)>1时，从某一个位置开始轮转一定会出现循环。那么一次循环的次数是cnt=n/g，并且需要从[0,g−1]分别开始循环，共循环g次，每次循环n/g个变量。
+
+def gcd(x, y) -> int:
+    return x if y == 0 else gcd(y, x % y)
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        n = len(nums)
+        k %= n
+        g = gcd(n, k)
+        cnt = n // g
+        for i in range(0, g):
+            j, pre = i, nums[i]
+            for _ in range(0, cnt):
+                j = (j + k) % n
+                nums[j], pre = pre, nums[j] #交互
+
