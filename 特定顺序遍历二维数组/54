@@ -1,0 +1,29 @@
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        if not matrix or not matrix[0]: return []
+        m = len(matrix)
+        n = len(matrix[0])
+        result = []
+        current_direction = 0
+        operation = [(0,1), (1,0), (0,-1), (-1,0)]
+        left, right, top, bottom = 0, n-1, 0, m-1
+        x, y = 0, 0
+
+        while(len(result)) != m*n :
+            result.append(matrix[x][y])
+            if current_direction == 0 and y == right:
+                current_direction += 1
+                top += 1
+            elif current_direction == 1 and x == bottom:
+                current_direction += 1
+                right -= 1
+            elif current_direction == 2 and y == left:
+                current_direction += 1
+                bottom -= 1 
+            elif current_direction == 3 and x == top:
+                current_direction += 1
+                left += 1                
+            current_direction %= 4
+            x += operation[current_direction][0]
+            y += operation[current_direction][1]
+        return result
