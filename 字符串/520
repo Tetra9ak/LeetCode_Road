@@ -1,1 +1,48 @@
+我们定义，在以下情况时，单词的大写用法是正确的：
 
+全部字母都是大写，比如 "USA" 。
+单词中所有字母都不是大写，比如 "leetcode" 。
+如果单词不只含有一个字母，只有首字母大写， 比如 "Google" 。
+给你一个字符串 word 。如果大写用法正确，返回 true ；否则，返回 false 。
+
+ 
+
+示例 1：
+输入：word = "USA"
+输出：true
+
+示例 2：
+输入：word = "FlaG"
+输出：false
+ 
+
+提示：
+1 <= word.length <= 100
+word 由小写和大写英文字母组成
+
+
+解题思路：
+1、遍历字符串中每个元素，设立计数器Count来统计大写字母个数
+2、分类讨论情况：
+  1)若字符串长度==1，直接返回true
+  2)若字符串长度＞1
+    a)若count==字符串长度，返回true
+    b)若count==1且第一个元素为大写，返回true
+    c)剩余其他情况返回false
+
+class Solution:
+    def detectCapitalUse(self, word: str) -> bool:
+        count = 0
+        length = len(word)
+        if length == 1:
+            return True
+        else:
+            for i in range(length):
+                if word[i].isupper() == True:
+                    count += 1
+                else:
+                    continue
+            if count == 0 or count == length or (count == 1 and word[0].isupper() == True):
+                return True
+            else:
+                return False
