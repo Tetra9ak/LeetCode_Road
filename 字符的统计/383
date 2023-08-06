@@ -1,0 +1,53 @@
+给你两个字符串：ransomNote 和 magazine ，判断 ransomNote 能不能由 magazine 里面的字符构成。
+
+如果可以，返回 true ；否则返回 false 。
+
+magazine 中的每个字符只能在 ransomNote 中使用一次。
+
+ 
+
+示例 1：
+输入：ransomNote = "a", magazine = "b"
+输出：false
+
+示例 2：
+输入：ransomNote = "aa", magazine = "ab"
+输出：false
+
+示例 3：
+输入：ransomNote = "aa", magazine = "aab"
+输出：true
+ 
+
+提示：
+1 <= ransomNote.length, magazine.length <= 105
+ransomNote 和 magazine 由小写英文字母组成
+
+
+
+解题思路：
+1、根据magezine生成hashmap
+2、遍历ransomNote中的元素，如果在hashmap中，该value-1
+  1)若hashmap存在值<0的情况，返回false
+  2)若不在hashmap中，返回false
+  3)其他情况返回true
+
+
+class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
+        # 统计magazine中的次数
+        dict1 = {}
+        for i in magazine:
+            if i not in dict1:
+                dict1[i] = 1
+            else:
+                dict1[i] = dict1[i] + 1
+        # 如果次数为0，或者找不到则返回False
+        for i in ransomNote:
+            if i in dict1:
+                dict1[i] = dict1[i] - 1
+                if dict1[i] < 0:
+                    return False
+            else:
+                return False
+        return True
