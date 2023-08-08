@@ -1,0 +1,49 @@
+定义字符串 base 为一个 "abcdefghijklmnopqrstuvwxyz" 无限环绕的字符串，所以 base 看起来是这样的：
+
+"...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....".
+给你一个字符串 s ，请你统计并返回 s 中有多少 不同非空子串 也在 base 中出现。
+
+ 
+
+示例 1：
+输入：s = "a"
+输出：1
+解释：字符串 s 的子字符串 "a" 在 base 中出现。
+
+示例 2：
+输入：s = "cac"
+输出：2
+解释：字符串 s 有两个子字符串 ("a", "c") 在 base 中出现。
+
+示例 3：
+输入：s = "zab"
+输出：6
+解释：字符串 s 有六个子字符串 ("z", "a", "b", "za", "ab", and "zab") 在 base 中出现。
+ 
+
+提示：
+1 <= s.length <= 105
+s 由小写英文字母组成
+
+
+解题思路：
+1、生成hashmap并维护计数器count用来记录连续字符串的长度
+2、遍历string，判断当前字符是否是前一个字符的后一位字母
+  a)若是，count+=1，继续遍历
+  b)若不是，count=1，继续遍历
+3、遍历过程中，hashmap中的每个key对应的value = max(value,count)
+4、把hashmap中每一项的value相加得到结果
+
+
+class Solution:
+    def findSubstringInWraproundString(self, s: str) -> int:
+        from collections import defaultdict
+        dp = defaultdict(int)
+        dp[s[0]], curMaxLen = 1, 1
+        for idx in range(1, len(s)):
+            if (ord(s[idx]) - ord(s[idx - 1])) % 26 == 1:
+                curMaxLen += 1
+            else:
+                curMaxLen = 1
+            dp[s[idx]] = max(dp[s[idx]], curMaxLen)
+        return sum(dp.values())
