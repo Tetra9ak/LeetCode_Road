@@ -1,0 +1,44 @@
+给定一个 24 小时制（小时:分钟 "HH:MM"）的时间列表，找出列表中任意两个时间的最小时间差并以分钟数表示。
+
+示例 1：
+输入：timePoints = ["23:59","00:00"]
+输出：1
+
+示例 2：
+输入：timePoints = ["00:00","23:59","00:00"]
+输出：0
+ 
+
+提示：
+2 <= timePoints.length <= 2 * 104
+timePoints[i] 格式为 "HH:MM"
+
+
+解题思路：
+1、将问题转换为，在一个0-24*60的整数区间内，两个值之间差值最小的为多少
+2、判断
+  1)如果timePoints数组长度超过24*60，说必然存在至少两个重复值，return 0
+  2)如果没有超过，创建hashmap存放timePoints中的值，转化方法为前两位*60+后两位。查找hashmap
+      a)如果存在value大于1的key，return 0
+      b)如果不存在value大于1的key，按顺序遍历，找出两个值之间的差，取最小值
+
+
+TOTAL = 24 * 60
+class Solution:
+    def findMinDifference(self, timePoints: List[str]) -> int:
+        if len(timePoints) > TOTAL:
+            return 0
+        seats = [0] * TOTAL
+        for t in timePoints:
+            seats[int(t[:2]) * 60 + int(t[-2:])] += 1
+        first, last, ans = None, None, TOTAL
+        for i in range(TOTAL):
+            if seats[i] > 1:
+                return 0
+            elif seats[i]:
+                if first is None:
+                    first = last = i
+                else:
+                    ans = min(ans, i - last)
+                last = i
+        return min(ans, first - last + TOTAL)aa
