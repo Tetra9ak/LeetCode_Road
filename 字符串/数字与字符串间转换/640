@@ -1,0 +1,61 @@
+求解一个给定的方程，将x以字符串 "x=#value" 的形式返回。该方程仅包含 '+' ， '-' 操作，变量 x 和其对应系数。
+
+如果方程没有解或存在的解不为整数，请返回 "No solution" 。如果方程有无限解，则返回 “Infinite solutions” 。
+
+题目保证，如果方程中只有一个解，则 'x' 的值是一个整数。
+
+ 
+
+示例 1：
+输入: equation = "x+5-3+x=6+x-2"
+输出: "x=2"
+
+示例 2:
+输入: equation = "x=x"
+输出: "Infinite solutions"
+
+示例 3:
+输入: equation = "2x=x"
+输出: "x=0"
+ 
+
+提示:
+3 <= equation.length <= 1000
+equation 只有一个 '='. 
+方程由绝对值在 [0, 100]  范围内且无任何前导零的整数和变量 'x' 组成。
+
+
+解题思路：
+1、根据等号分开方程的左右两边
+2、两边分别统计常数项和未知数项的系数
+3、处理后得出结果
+
+
+class Solution:
+    def solveEquation(self, equation: str) -> str:
+
+        def check(st):
+            a = b = i = 0
+            m = len(st)
+            while i < m:
+                cur = st[i]
+                while i + 1 < m and st[i + 1] not in "+-":
+                    cur += st[i + 1]
+                    i += 1
+                # 更新系数
+                if cur[-1] == "x":
+                    cur = cur[:-1]
+                    # 注意"+x"\"-x"\"x"的特殊情况
+                    a += int(cur) if cur and cur not in "+-" else int(cur + "1")
+                else:
+                    b += int(cur)
+                i += 1
+            return [a, b]
+
+        lst = equation.split("=")
+        a1, b1 = check(lst[0])
+        a2, b2 = check(lst[1])
+        if a1 == a2:
+            return "Infinite solutions" if b1 == b2 else "No solution"
+        ans = (b2 - b1) // (a1 - a2)
+        return f"x={ans}"
