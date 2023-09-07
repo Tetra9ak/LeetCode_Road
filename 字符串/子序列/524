@@ -1,0 +1,39 @@
+给你一个字符串 s 和一个字符串数组 dictionary ，找出并返回 dictionary 中最长的字符串，该字符串可以通过删除 s 中的某些字符得到。
+如果答案不止一个，返回长度最长且字母序最小的字符串。如果答案不存在，则返回空字符串。
+
+
+示例 1：
+输入：s = "abpcplea", dictionary = ["ale","apple","monkey","plea"]
+输出："apple"
+
+示例 2：
+输入：s = "abpcplea", dictionary = ["a","b","c"]
+输出："a"
+ 
+
+提示：
+
+1 <= s.length <= 1000
+1 <= dictionary.length <= 1000
+1 <= dictionary[i].length <= 1000
+s 和 dictionary[i] 仅由小写英文字母组成
+
+解题思路：
+1、将列表中的字符串按长短排列，长的在前
+2、遍历每一个字符串，遍历字符串中的每一个字符
+3、如果能在s中找到对应的字符，记录其idx，判断下一个字符与idx+1对应的值
+4、如果找不到了则表明不符合要求
+
+
+class Solution:
+    def findLongestWord(self, s: str, dictionary: List[str]) -> str:
+        for word in sorted(dictionary, key = lambda x:(-len(x), x)):
+            idx, mark = 0, True
+            for c in word:
+                idx = s.find(c, idx) + 1
+                if not idx:
+                    mark = False
+                    break
+            if mark:
+                return word
+        return ""
