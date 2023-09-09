@@ -1,0 +1,53 @@
+给你两个二进制字符串 a 和 b ，以二进制字符串的形式返回它们的和。
+
+示例 1：
+输入:a = "11", b = "1"
+输出："100"
+
+示例 2：
+输入：a = "1010", b = "1011"
+输出："10101"
+ 
+
+提示：
+1 <= a.length, b.length <= 104
+a 和 b 仅由字符 '0' 或 '1' 组成
+字符串如果不是 "0" ，就不含前导零
+
+解题思路；
+1、判断两个字符串的长度，并将短的一个添加0到相同长度
+2、自后向前按位遍历，记录和与进位，按情况枚举
+  1)两者和为1且进位为1
+    a)ans中添加一位1，置进位=0
+  2)两者和为0且进位为1
+    a)ans中添加一位1，置进位=1
+  3)两者和为2
+    a)ans添加上一个进位值，置进位=1
+3、单独判断首位的进位情况，如果进位=1，首位添加1；否则直接return
+
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        if len(a) > len(b) :
+            b = "0" * (len(a)-len(b)) + b
+        elif len(b) > len(a):
+            a = "0" * (len(b)-len(a)) + a
+        
+        re = 0
+        ans = ""
+        for i in range(len(a)-1,-1,-1):
+            if int(a[i]) + int(b[i]) == 2:
+                ans = str(re) + ans
+                re = 1
+            elif int(a[i]) + int(b[i]) == 1 and re == 0:
+                ans = "1" + ans
+                re = 0
+            elif int(a[i]) + int(b[i]) == 1 and re == 1:
+                ans = "0" + ans
+                re = 1
+            else:
+                ans = str(re) + ans
+                re = 0
+        if re == 1:
+            return ("1" + ans)
+        else:
+            return ans
